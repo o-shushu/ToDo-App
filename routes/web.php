@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Home\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +38,7 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/password/reset', [ResetPasswordController::class, 'showResetForm'])->name('password.request');
 Route::post('/password/email', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
-Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+Route::get('/send_complete', [ResetPasswordController::class, 'sendComplete'])->name('send_complete');
+Route::get('/edit', [ResetPasswordController::class, 'edit'])->name('edit');
+Route::post('/update', [ResetPasswordController::class, 'update'])->name('update');
+Route::get('/edited', [ResetPasswordController::class, 'edited'])->name('edited');
