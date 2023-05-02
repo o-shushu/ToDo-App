@@ -2,7 +2,8 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use App\Repositories\Eloquents\UserTokenRepository;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use App\Repositories\Interfaces\UserTokenRepositoryInterface;
 
