@@ -23,7 +23,7 @@ class EditTask extends FormRequest
      */
     public function rules()
     {
-        $rule = parent::rules();
+        $rule = (new CreateTask())->rules();
 
         $status_rule = Rule::in(array_keys(Task::STATUS));
 

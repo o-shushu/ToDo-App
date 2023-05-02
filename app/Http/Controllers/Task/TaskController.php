@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Task;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateTask;
 use App\Http\Requests\EditTask;
 use App\Models\Folder;
@@ -13,26 +12,35 @@ class TaskController extends Controller
 {
     public function index(int $id)
     {
-        $folders = Folder::all();
-        // $folders = Auth::user()->folders()->get();
+        $folders = Folder::all()->where('user_id', auth()->user()->id);
+
         $current_folder = Folder::find($id);
 
-        //$tasks = Task::where('folder_id', $current_folder->id)->get();
+        if(isset($current_folder)){
 
-        $tasks = $current_folder->tasks()->get();
+            $tasks = $current_folder->tasks()->get();
+    
+            return view('tasks/index', [
+                'folders' => $folders,
+                'current_folder_id' => $id,
+                'tasks' => $tasks,
+            ]);
+        }
 
-        return view('tasks/index', [
-            'folders' => $folders,
-            'current_folder_id' => $id,
-            'tasks' => $tasks,
-        ]);
+        return view('errors/pages_not_exist');
     }
 
     public function showCreateForm(int $id)
     {
-        return view('tasks/create', [
-            'folder_id' => $id
-        ]);
+        $current_folder = Folder::find($id);
+
+        if(isset($current_folder)){
+            return view('tasks/create', [
+                'folder_id' => $id
+            ]);
+        }
+
+        return view('errors/pages_not_exist');
     }
 
     public function create(int $id, CreateTask $request)
@@ -41,23 +49,30 @@ class TaskController extends Controller
 
         $task = new Task();
         $task->title = $request->title;
-        $task->due_dae = $request->due_date;
+        $task->due_date = $request->due_date;
 
         //リレーションを活かしたデータの保存方法
         $current_folder->tasks()->save($task);
 
-        return redirect()->route('task.index',[
+        return redirect()->route('tasks.index',[
             'id' => $current_folder->id,
         ]);
+
     }
 
     public function showEditForm(int $id, int $taskId)
     {
+        $current_folder = Folder::find($id);
         $task = Task::find($taskId);
 
-        return view('tasks/edit', [
-            'task' => $task,
-        ]);
+        if(isset($current_folder) && isset($task)){
+
+            return view('tasks/edit', [
+                'task' => $task,
+            ]);
+        }
+
+        return view('errors/pages_not_exist');
     }
 
         public function edit(int $id, int $taskId, EditTask $request)

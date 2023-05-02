@@ -12,4 +12,9 @@ class Folder extends Model
         //省略しない$this->hasMany('App\Models\Task', 'folder_id', 'id');
         return $this->hasMany('App\Models\Task');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
